@@ -32,6 +32,7 @@ public class Controller2D {
 
     private boolean currentlyEditing = false;
     private Shape currentShape = Shape.LINE;
+    private Point2D currentPoint = null;
 
     public Controller2D(Panel panel) {
         this.panel = panel;
@@ -49,7 +50,7 @@ public class Controller2D {
 
                 if (e.getButton() == MouseEvent.BUTTON3)
                 {
-                    findClosestPoint(e.getX(),e.getY());
+                    currentPoint = findClosestPoint(e.getX(),e.getY());
                 }
                 else if (e.getButton() == MouseEvent.BUTTON1)
                 {
@@ -90,13 +91,19 @@ public class Controller2D {
                     if (currentlyEditing)
                         currentlyEditing = false;
                 }
+                currentPoint = null;
             }
         });
 
         panel.addMouseMotionListener(new MouseAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {
-                if (currentlyEditing && currentShape == Shape.LINE)
+                if (currentPoint != null)
+                {
+                    currentPoint.set(e.getX(),e.getY());
+                    drawScene();
+                }
+                else if (currentlyEditing && currentShape == Shape.LINE)
                 {
                     int endX = e.getX();
                     int endY = e.getY();
@@ -136,11 +143,44 @@ public class Controller2D {
         });
     }
 
-    private void findClosestPoint(int x, int y)
+    private Point2D findClosestPoint(int x, int y)
     {
         Point2D closestPoint = null;
-        float closestPointDistance = Float.POSITIVE_INFINITY;
+        double closestPointDistance = Double.POSITIVE_INFINITY;
 
+        for (Line l : lineList)
+        {
+            double magnitude = Point2D.getMagnitudeBetween(x,y,l.getStart().getX(),l.getStart().getY());
+            if (magnitude <= closestPointDistance)
+            {
+                closestPointDistance = magnitude;
+                closestPoint = l.getStart();
+            }
+            magnitude = Point2D.getMagnitudeBetween(x,y,l.getEnd().getX(),l.getEnd().getY());
+            if (magnitude <= closestPointDistance)
+            {
+                closestPointDistance = magnitude;
+                closestPoint = l.getEnd();
+            }
+        }
+
+        for (Polygon p : polygonList)
+        {
+            for (int i = 0; i < p.getSize(); i++)
+            {
+                Point2D point = p.getPoint(i);
+                double magnitude = Point2D.getMagnitudeBetween(point.getX(), point.getY(), x, y);
+                if (magnitude <= closestPointDistance)
+                {
+                    closestPointDistance = magnitude;
+                    closestPoint = point;
+                }
+            }
+        }
+
+        if (closestPointDistance > 5) return null;
+
+        return closestPoint;
     }
 
     private void drawScene() {
