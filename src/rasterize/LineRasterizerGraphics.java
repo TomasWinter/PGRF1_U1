@@ -17,9 +17,4 @@ public class LineRasterizerGraphics extends LineRasterizer {
         Graphics g = ((RasterBufferedImage)raster).getImage().getGraphics();
         g.drawLine(x1, y1, x2, y2);
     }
-
-    @Override
-    public boolean isPointOnLine(Point2D point, int x1, int y1, int x2, int y2) {
-        return false;
-    }
 }

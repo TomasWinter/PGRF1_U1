@@ -23,4 +23,19 @@ public class Line {
         if (end == null) end = new Point2D(x,y);
         else end.set(x,y);
     }
+
+
+
+    public Point2D getClosestPoint(int x, int y)
+    {
+        double magnitudeToStart = Point2D.getMagnitudeBetween(x,y, start.getX(),start.getY());
+        double magnitudeToEnd = Point2D.getMagnitudeBetween(x,y, end.getX(),end.getY());
+
+        System.out.println(magnitudeToStart + "...." + magnitudeToEnd);
+
+        if (magnitudeToEnd <= magnitudeToStart)
+            return end;
+        else
+            return start;
+    }
 }

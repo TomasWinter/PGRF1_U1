@@ -24,8 +24,8 @@ public class Controller2D {
     }
 
     // Rasterizers
-    private LineRasterizer lineRasterizer;
-    private PolygonRasterizer polygonRasterizer;
+    private final LineRasterizer lineRasterizer;
+    private final PolygonRasterizer polygonRasterizer;
 
     List<Polygon> polygonList = new ArrayList<>();
     List<Line> lineList = new ArrayList<>();
@@ -78,7 +78,18 @@ public class Controller2D {
                         if (polygonList.isEmpty()) polygonList.add(new Polygon());
 
                         Point2D point = new Point2D(e.getX(), e.getY());
-                        polygonList.getLast().addPoint(point);
+
+                        Polygon polygon = polygonList.getLast();
+                        if (polygon.getSize() > 2)
+                        {
+                            int index = polygon.getClosestEdge(e.getX(),e.getY());
+                            if (index > -1)
+                                polygon.addPoint(point, index+1);
+                        }
+                        else
+                        {
+                            polygon.addPoint(point);
+                        }
 
                         drawScene();
                     }
@@ -111,11 +122,11 @@ public class Controller2D {
                     drawScene();
                 }
                 else if (currentlyEditing && currentShape == Shape.POLYGON)
-                {
+                {/*
                     int endX = e.getX();
                     int endY = e.getY();
                     polygonList.getLast().setPoint(new Point2D(endX, endY),polygonList.getLast().getSize()-1);
-                    drawScene();
+                    drawScene();*/
                 }
             }
         });
@@ -127,7 +138,7 @@ public class Controller2D {
                 {
                     if (currentShape == Shape.LINE) currentShape = Shape.POLYGON;
                     else currentShape = Shape.LINE;
-                    System.out.println("Switched editing to "+String.valueOf(currentShape));
+                    System.out.println("Switched editing to "+currentShape);
                 }
                 else if (!currentlyEditing && e.getKeyCode() == KeyEvent.VK_C)
                 {
@@ -150,31 +161,23 @@ public class Controller2D {
 
         for (Line l : lineList)
         {
-            double magnitude = Point2D.getMagnitudeBetween(x,y,l.getStart().getX(),l.getStart().getY());
+            Point2D point = l.getClosestPoint(x,y);
+            double magnitude = Point2D.getMagnitudeBetween(point.getX(), point.getY(), x, y);
             if (magnitude <= closestPointDistance)
             {
                 closestPointDistance = magnitude;
-                closestPoint = l.getStart();
-            }
-            magnitude = Point2D.getMagnitudeBetween(x,y,l.getEnd().getX(),l.getEnd().getY());
-            if (magnitude <= closestPointDistance)
-            {
-                closestPointDistance = magnitude;
-                closestPoint = l.getEnd();
+                closestPoint = point;
             }
         }
 
         for (Polygon p : polygonList)
         {
-            for (int i = 0; i < p.getSize(); i++)
+            Point2D point = p.getClosestPoint(x,y);
+            double magnitude = Point2D.getMagnitudeBetween(point.getX(), point.getY(), x, y);
+            if (magnitude <= closestPointDistance)
             {
-                Point2D point = p.getPoint(i);
-                double magnitude = Point2D.getMagnitudeBetween(point.getX(), point.getY(), x, y);
-                if (magnitude <= closestPointDistance)
-                {
-                    closestPointDistance = magnitude;
-                    closestPoint = point;
-                }
+                closestPointDistance = magnitude;
+                closestPoint = point;
             }
         }
 
