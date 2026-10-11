@@ -29,11 +29,13 @@ public class Point2D {
     }
 
 
+    // Metoda vrátí délku vektoru na základě pythagorovi věty
     public static double getMagnitude(int x, int y)
     {
         return Math.sqrt(Math.pow(x,2) + Math.pow(y,2));
     }
 
+    // Metoda vrátí vzdálenost mezi 2 body
     public static double getMagnitudeBetween(int x1, int y1, int x2, int y2)
     {
         return Point2D.getMagnitude(Math.abs(x2-x1),Math.abs(y2-y1));

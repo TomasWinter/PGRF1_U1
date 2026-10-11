@@ -1,7 +1,6 @@
 package rasterize;
 
 import model.Line;
-import model.Point2D;
 import raster.Raster;
 
 public abstract class LineRasterizer {

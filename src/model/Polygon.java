@@ -3,6 +3,7 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
+//Třída pro ukládaní polygonů
 public class Polygon {
     private final List<Point2D> points;
 
@@ -22,6 +23,15 @@ public class Polygon {
         points.add(index, point);
     }
 
+    public void removePoint(Point2D point)
+    {
+        points.remove(point);
+    }
+    public void removePoint(int index)
+    {
+        points.remove(index);
+    }
+
     public Point2D getPoint(int index) {
         return points.get(index);
     }
@@ -30,9 +40,10 @@ public class Polygon {
         return points.size();
     }
 
+    // Metoda vrátí index bodu, který značí začátek hrany, která je nejblíž vstupnímu bodu
+    // Metoda nefunguje v případě kdy je krátká hrana vedle dlouhé hrany, jelikoš pro zjištění blízkosti se využívá součet vzdálenosti
     public int getClosestEdge(int x, int y)
     {
-        double closestHypoDif = Double.POSITIVE_INFINITY;
         double closestDistance = Double.POSITIVE_INFINITY;
         int closestPointIndex = -1;
 
@@ -41,26 +52,21 @@ public class Polygon {
             Point2D pointA = points.get(i);
             Point2D pointB = points.get((i + 1) % points.size());
 
-            double hypoEdge = Point2D.getMagnitudeBetween(pointA.getX(),pointA.getY(),pointB.getX(),pointB.getY());
             double nearEdge = Point2D.getMagnitudeBetween(pointA.getX(), pointA.getY(), x, y);
             double farEdge = Point2D.getMagnitudeBetween(pointB.getX(), pointB.getY(), x, y);
-            double height = Math.pow(nearEdge,2) / hypoEdge;
 
-            double halfA = Math.sqrt(Math.abs(nearEdge*nearEdge - height*height));
-            double halfB = Math.sqrt(Math.abs(farEdge*farEdge - height*height));
+            double magnitude = nearEdge + farEdge;
 
-            if (height <= closestDistance)
+            if (magnitude <= closestDistance)
             {
-                if (halfA+halfB-hypoEdge > 0.1f) continue;
-
-                closestDistance = height;
+                closestDistance = magnitude;
                 closestPointIndex = i;
             }
         }
-
         return closestPointIndex;
     }
 
+    // Metoda vrátí který bod na polygonu je nejblíž vstupnímu bodu
     public Point2D getClosestPoint(int x, int y)
     {
         double closestDistance = Double.POSITIVE_INFINITY;

@@ -2,31 +2,24 @@ package rasterize;
 
 import model.Point2D;
 import model.Polygon;
-import raster.Raster;
 
 public class PolygonRasterizer {
-    private LineRasterizer lineRasterizer;
-
+    private final LineRasterizer lineRasterizer;
 
     public PolygonRasterizer(LineRasterizer lineRasterizer) {
         this.lineRasterizer = lineRasterizer;
     }
 
-    public void setLineRasterizer(LineRasterizer lineRasterizer) {
-        this.lineRasterizer = lineRasterizer;
-    }
-
     public void rasterize(Polygon polygon) {
         if (polygon == null) return;
+        if (polygon.getSize() == 0) return;
 
-        if (polygon.getSize() == 1)
+        if (polygon.getSize() == 1) //vykreslení bodu, když polygon má jen jeden bod
         {
             Point2D point = polygon.getPoint(0);
             lineRasterizer.getRaster().setPixel(point.getX(), point.getY(), 0xffffff);
+            return;
         }
-        if (polygon.getSize() < 2) return;
-
-
 
         for (int i = 0; i < polygon.getSize(); i++) {
             Point2D pointA = polygon.getPoint(i);

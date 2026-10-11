@@ -1,6 +1,5 @@
 package rasterize;
 
-import model.Point2D;
 import raster.Raster;
 import raster.RasterBufferedImage;
 
