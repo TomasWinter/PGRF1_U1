@@ -10,8 +10,8 @@ public class Line {
     }
 
     public void setStart(int x, int y) {
-        if (start == null) start = new Point2D(x,y);
-        else start.set(x,y);
+        if (start == null) start = new Point2D(x, y);
+        else start.set(x, y);
     }
 
     public Point2D getEnd() {
@@ -19,16 +19,15 @@ public class Line {
     }
 
     public void setEnd(int x, int y) {
-        if (end == null) end = new Point2D(x,y);
-        else end.set(x,y);
+        if (end == null) end = new Point2D(x, y);
+        else end.set(x, y);
     }
 
 
     // Metoda vrátí konec úsečky který je nejblíž vstupnímu bodu
-    public Point2D getClosestPoint(int x, int y)
-    {
-        double magnitudeToStart = Point2D.getMagnitudeBetween(x,y, start.getX(),start.getY());
-        double magnitudeToEnd = Point2D.getMagnitudeBetween(x,y, end.getX(),end.getY());
+    public Point2D getClosestPoint(int x, int y) {
+        double magnitudeToStart = Point2D.getMagnitudeBetween(x, y, start.getX(), start.getY());
+        double magnitudeToEnd = Point2D.getMagnitudeBetween(x, y, end.getX(), end.getY());
 
         if (magnitudeToEnd <= magnitudeToStart)
             return end;

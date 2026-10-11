@@ -24,7 +24,7 @@ public class PolygonRasterizer {
         for (int i = 0; i < polygon.getSize(); i++) {
             Point2D pointA = polygon.getPoint(i);
             Point2D pointB = polygon.getPoint((i + 1) % polygon.getSize());
-            lineRasterizer.rasterize(pointA.getX(),  pointA.getY(), pointB.getX(), pointB.getY());
+            lineRasterizer.rasterize(pointA.getX(), pointA.getY(), pointB.getX(), pointB.getY());
         }
     }
 }

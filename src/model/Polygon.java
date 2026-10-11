@@ -11,24 +11,23 @@ public class Polygon {
         points = new ArrayList<>();
     }
 
-    public void setPoint(Point2D point, int index)
-    {
-        points.set(index,point);
+    public void setPoint(Point2D point, int index) {
+        points.set(index, point);
     }
 
     public void addPoint(Point2D point) {
         points.add(point);
     }
-    public void addPoint(Point2D point,int index) {
+
+    public void addPoint(Point2D point, int index) {
         points.add(index, point);
     }
 
-    public void removePoint(Point2D point)
-    {
+    public void removePoint(Point2D point) {
         points.remove(point);
     }
-    public void removePoint(int index)
-    {
+
+    public void removePoint(int index) {
         points.remove(index);
     }
 
@@ -36,19 +35,17 @@ public class Polygon {
         return points.get(index);
     }
 
-    public int  getSize() {
+    public int getSize() {
         return points.size();
     }
 
     // Metoda vrátí index bodu, který značí začátek hrany, která je nejblíž vstupnímu bodu
     // Metoda nefunguje v případě kdy je krátká hrana vedle dlouhé hrany, jelikoš pro zjištění blízkosti se využívá součet vzdálenosti
-    public int getClosestEdge(int x, int y)
-    {
+    public int getClosestEdge(int x, int y) {
         double closestDistance = Double.POSITIVE_INFINITY;
         int closestPointIndex = -1;
 
-        for (int i = 0; i < points.size(); i++)
-        {
+        for (int i = 0; i < points.size(); i++) {
             Point2D pointA = points.get(i);
             Point2D pointB = points.get((i + 1) % points.size());
 
@@ -57,8 +54,7 @@ public class Polygon {
 
             double magnitude = nearEdge + farEdge;
 
-            if (magnitude <= closestDistance)
-            {
+            if (magnitude <= closestDistance) {
                 closestDistance = magnitude;
                 closestPointIndex = i;
             }
@@ -67,16 +63,14 @@ public class Polygon {
     }
 
     // Metoda vrátí který bod na polygonu je nejblíž vstupnímu bodu
-    public Point2D getClosestPoint(int x, int y)
-    {
+    public Point2D getClosestPoint(int x, int y) {
         double closestDistance = Double.POSITIVE_INFINITY;
         int closestPointIndex = 0;
 
         for (int i = 0; i < points.size(); i++) {
             Point2D point = points.get(i);
-            double magnitude = Point2D.getMagnitudeBetween(x,y,point.getX(),point.getY());
-            if (magnitude <= closestDistance)
-            {
+            double magnitude = Point2D.getMagnitudeBetween(x, y, point.getX(), point.getY());
+            if (magnitude <= closestDistance) {
                 closestDistance = magnitude;
                 closestPointIndex = i;
             }

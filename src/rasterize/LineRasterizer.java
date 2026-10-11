@@ -11,10 +11,10 @@ public abstract class LineRasterizer {
     }
 
     public abstract void rasterize(int x1, int y1, int x2, int y2);
-    public void rasterize(Line line)
-    {
+
+    public void rasterize(Line line) {
         if (line == null || line.getStart() == null || line.getEnd() == null) return;
-        rasterize(line.getStart().getX(),line.getStart().getY(),line.getEnd().getX(),line.getEnd().getY());
+        rasterize(line.getStart().getX(), line.getStart().getY(), line.getEnd().getX(), line.getEnd().getY());
     }
 
     public Raster getRaster() {

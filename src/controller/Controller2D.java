@@ -18,8 +18,7 @@ import java.util.List;
 public class Controller2D {
     private final Panel panel;
 
-    public enum Shape
-    {
+    public enum Shape {
         LINE, POLYGON
     }
 
@@ -34,7 +33,7 @@ public class Controller2D {
     private boolean currentlyEditing = false;
     private Shape currentShape = Shape.LINE;
     private Point2D currentPoint = null;
-    private  Polygon currentEditPolygon = null;
+    private Polygon currentEditPolygon = null;
 
     public Controller2D(Panel panel) {
         this.panel = panel;
@@ -53,11 +52,9 @@ public class Controller2D {
                 if (e.getButton() == MouseEvent.BUTTON3) // Kliknutím pravým tlačítkem se označí nejbližší bod v určitém dosahu pro editaci
                 {
                     currentlyEditing = true;
-                    currentPoint = findClosestPoint(e.getX(),e.getY());
-                }
-                else if (e.getButton() == MouseEvent.BUTTON1)
-                {
-                    if(currentShape == Shape.LINE) { // Vytvoří se čára a konečný bod se označí pro editaci aby se vytvořila pružná čára
+                    currentPoint = findClosestPoint(e.getX(), e.getY());
+                } else if (e.getButton() == MouseEvent.BUTTON1) {
+                    if (currentShape == Shape.LINE) { // Vytvoří se čára a konečný bod se označí pro editaci aby se vytvořila pružná čára
 
                         if (currentlyEditing) return;
                         currentlyEditing = true;
@@ -74,8 +71,7 @@ public class Controller2D {
                         currentPoint = newLine.getEnd();
 
                         drawScene();
-                    }
-                    else if(currentShape == Shape.POLYGON) { // Přidá se bod do posledního vytvořeného polygonu a bod se označí pro editaci kvůli pružné čáře
+                    } else if (currentShape == Shape.POLYGON) { // Přidá se bod do posledního vytvořeného polygonu a bod se označí pro editaci kvůli pružné čáře
 
                         if (currentlyEditing) return;
                         currentlyEditing = true;
@@ -87,17 +83,14 @@ public class Controller2D {
                         Polygon polygon = polygonList.getLast();
                         if (polygon.getSize() > 2) // když má polygon alespoň 3 body, následující bod se přidá na existující hranu
                         {
-                            int index = polygon.getClosestEdge(e.getX(),e.getY());
-                            if (index > -1)
-                            {
-                                polygon.addPoint(point, index+1);
-                                currentPoint = polygon.getPoint(index+1);
+                            int index = polygon.getClosestEdge(e.getX(), e.getY());
+                            if (index > -1) {
+                                polygon.addPoint(point, index + 1);
+                                currentPoint = polygon.getPoint(index + 1);
                             }
-                        }
-                        else
-                        {
+                        } else {
                             polygon.addPoint(point);
-                            currentPoint = polygon.getPoint(polygon.getSize()-1);
+                            currentPoint = polygon.getPoint(polygon.getSize() - 1);
                         }
                         currentEditPolygon = polygon;
 
@@ -109,7 +102,7 @@ public class Controller2D {
             @Override
             public void mouseReleased(MouseEvent e) {
                 // při puštění tlačítka se vymažou hodnoty atributů pro editaci
-                if(e.getButton() == MouseEvent.BUTTON1 || e.getButton() == MouseEvent.BUTTON3) {
+                if (e.getButton() == MouseEvent.BUTTON1 || e.getButton() == MouseEvent.BUTTON3) {
                     currentlyEditing = false;
                     currentPoint = null;
                 }
@@ -121,9 +114,8 @@ public class Controller2D {
             @Override
             public void mouseDragged(MouseEvent e) {
                 // pozice editovaného bodu se upraví když se pohne myš
-                if (currentPoint != null)
-                {
-                    currentPoint.set(e.getX(),e.getY());
+                if (currentPoint != null) {
+                    currentPoint.set(e.getX(), e.getY());
                     drawScene();
                 }
             }
@@ -133,27 +125,23 @@ public class Controller2D {
             @Override
             public void keyPressed(KeyEvent e) {
                 // Klávesa V změní jaký tvar se vytváří
-                if (!currentlyEditing && e.getKeyCode() == KeyEvent.VK_V)
-                {
+                if (!currentlyEditing && e.getKeyCode() == KeyEvent.VK_V) {
                     if (currentShape == Shape.LINE) currentShape = Shape.POLYGON;
                     else currentShape = Shape.LINE;
-                    System.out.println("Switched editing to "+currentShape);
+                    System.out.println("Switched editing to " + currentShape);
                 }
                 // Klávesa C vymaže všechny tvary
-                else if (!currentlyEditing && e.getKeyCode() == KeyEvent.VK_C)
-                {
+                else if (!currentlyEditing && e.getKeyCode() == KeyEvent.VK_C) {
                     lineList.clear();
                     polygonList.clear();
                     drawScene();
                 }
                 // Klávesou ENTER se začne vytvářet nový polygon
-                else if (!currentlyEditing && e.getKeyCode() == KeyEvent.VK_ENTER)
-                {
+                else if (!currentlyEditing && e.getKeyCode() == KeyEvent.VK_ENTER) {
                     polygonList.add(new Polygon());
                 }
                 // Klávesou DELETE se smaže editovaný bod (Pouze pro polygon)
-                else if (currentlyEditing && e.getKeyCode() == KeyEvent.VK_DELETE)
-                {
+                else if (currentlyEditing && e.getKeyCode() == KeyEvent.VK_DELETE) {
                     if (currentEditPolygon == null || currentPoint == null) return;
                     currentEditPolygon.removePoint(currentPoint);
                     drawScene();
@@ -163,30 +151,25 @@ public class Controller2D {
     }
 
     // Funkce najde nejbližší bod ze všech tvarů
-    private Point2D findClosestPoint(int x, int y)
-    {
+    private Point2D findClosestPoint(int x, int y) {
         Point2D closestPoint = null;
         double closestPointDistance = Double.POSITIVE_INFINITY;
 
-        for (Line l : lineList)
-        {
+        for (Line l : lineList) {
             // Vzdálenost nejbližšího bodu úsečky se porovná s momentálně nejbližšim bodem
-            Point2D point = l.getClosestPoint(x,y);
+            Point2D point = l.getClosestPoint(x, y);
             double magnitude = Point2D.getMagnitudeBetween(point.getX(), point.getY(), x, y);
-            if (magnitude <= closestPointDistance)
-            {
+            if (magnitude <= closestPointDistance) {
                 closestPointDistance = magnitude;
                 closestPoint = point;
             }
         }
 
-        for (Polygon p : polygonList)
-        {
+        for (Polygon p : polygonList) {
             // Vzdálenost nejbližšího bodu polygonu se porovná s momentálně nejbližšim bodem
-            Point2D point = p.getClosestPoint(x,y);
+            Point2D point = p.getClosestPoint(x, y);
             double magnitude = Point2D.getMagnitudeBetween(point.getX(), point.getY(), x, y);
-            if (magnitude <= closestPointDistance)
-            {
+            if (magnitude <= closestPointDistance) {
                 closestPointDistance = magnitude;
                 closestPoint = point;
                 currentEditPolygon = p; // nejbližší polygon se přidá do currentEditPolygon, aby se z něj mohli smazat body, pokud uživatel zmáčkne delete
