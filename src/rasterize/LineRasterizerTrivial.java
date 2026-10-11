@@ -22,13 +22,14 @@ public class LineRasterizerTrivial extends LineRasterizer {
             return;
         }
 
+        //rovnice přímky y = kx + q
         float k = (float)(y2 - y1)/(x2 - x1);
         float q = -k * x2 + y2;
 
         // Pokud je úsečka moc strmá, prohodí se ose přes kteropu se iteruje
         if (Math.abs(k) > 1)
         {
-            // výpočet nové rovnice pro úsečku
+            // výpočet nových hodnot pro rovnici
             k = (float)(x2 - x1)/(y2 - y1);
             q = -k * y2 + x2;
 
